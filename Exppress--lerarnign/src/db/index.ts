@@ -1,8 +1,9 @@
+
 import { Pool } from "pg"
 import config from "../config"
 
- export const pool = new Pool({
-  connectionString : config.connection_string,
+export const pool = new Pool({
+  connectionString: config.connection_string,
 })
 
 export const initDB = async () => {
@@ -18,7 +19,20 @@ export const initDB = async () => {
       created_at TIMESTAMP DEFAULT NOW(),
       update_at TIMESTAMP DEFAULT NOW()
 )
-      `)
+      `);
+   await pool.query(`
+    CREATE TABLE IF NOT EXISTS profile(
+    id SERIAL PRIMARY KEY,
+    user_id INT UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+
+    bio TEXT,
+    address TEXT,
+    phone VARCHAR(15),
+    gender VARCHAR(10),
+     created_at TIMESTAMP DEFAULT NOW(),
+      update_at TIMESTAMP DEFAULT NOW()
+    )
+    `)
     console.log("database connected successfully!")
   } catch (error) {
     console.log(error)
