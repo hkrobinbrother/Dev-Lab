@@ -2,8 +2,14 @@ import type { NextFunction, Request, Response } from "express"
 import jwt, { type JwtPayload } from "jsonwebtoken"
 import config from "../config";
 import { pool } from "../db";
-import { truncates } from "bcryptjs";
-const auth = () => {
+
+import type { ROLES } from "../types";
+
+
+
+
+
+const auth = (...roles : ROLES[]) => {
     return async (req: Request, res: Response, next: NextFunction) => {
         try {
             // console.log(req.headers);
@@ -44,13 +50,23 @@ const auth = () => {
 
                 });
             }
-            if (!user.is_active) {
+            if (!user?.is_active) {
                 res.status(403).json({
                     success: false,
                     message: "Forbidden",
 
                 });
             }
+            // roles = ["admin", "agent"]
+            // user.role = "admin" | "user" | "agent"
+            if(roles.length && roles.includes(user.role)){
+                res.status(403).json({
+                    success: false,
+                    message: "Forbidden",
+
+                });
+            }
+
             req.user = decoded,
 
                 next()
