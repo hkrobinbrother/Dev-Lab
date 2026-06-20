@@ -37,7 +37,7 @@ const loginUserIntoDB = async (payload: {
     const accessToken = jwt.sign(jwtpayload, config.secret as string, { expiresIn: "1d" })
 
 
-    const refreshToken = jwt.sign(jwtpayload, config.refresh_secret as string, { expiresIn: "1d" })
+    const refreshToken = jwt.sign(jwtpayload, config.refresh_secret as string, { expiresIn: "10d" })
 
 
     return { accessToken, refreshToken };
@@ -64,6 +64,16 @@ const generateFreshToken = async (token: string) => {
     if (!user?.is_active) {
         throw new Error("forbiden")
     }
+    const jwtpayload = {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+        is_active: user.is_active,
+        email: user.email
+    }
+
+    const accessToken = jwt.sign(jwtpayload, config.refresh_secret as string, { expiresIn: "1d" })
+    return { accessToken }
 }
 
 export const authService = {

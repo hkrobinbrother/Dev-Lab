@@ -45,9 +45,9 @@ const refreshToken = async(req: Request, res: Response)=>{
         })
 
 
-        res.status(201).json({
+        res.status(200).json({
             success: true,
-            message: "Profile created successfully",
+            message: "Access token generate",
             data: result,
         });
     } catch (error: any) {

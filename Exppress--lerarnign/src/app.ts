@@ -7,13 +7,19 @@ import fs from "fs"
 import logger from "./middleware/logger";
 import CookieParser from "cookie-parser"
 const app: Application = express()
+import cors from "cors"
+import globalErrorHandler from "./middleware/globalEroorHandler";
 
 app.use(CookieParser())
 app.use(express.json());
 app.use(express.text());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(logger);
+const corsOptions = {
+  origin: 'http://5000',
+ 
+}
+app.use(cors(corsOptions))
 
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
@@ -28,7 +34,7 @@ app.use("/api/auth", authRoute)
 
 
 
-
+app.use(globalErrorHandler);
 
 
 
